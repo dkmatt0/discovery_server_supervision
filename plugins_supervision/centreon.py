@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding: utf-8
 
 import sys
 
@@ -23,13 +24,13 @@ class PluginSupervision(PluginSupervisionBase):
 
     # Chargement des fichiers de configuration
     try:
-      with open('config.yaml', 'r') as f_config:
+      with open('../config.yaml', 'r') as f_config:
         self.config = yaml.load(f_config)
     except FileNotFoundError:
       sys.stderr.write("Impossible de charger le fichier config.yaml.")
       exit(10)
     try:
-      with open('secret.yaml', 'r') as f_secret:
+      with open('../secret.yaml', 'r') as f_secret:
         self.secret = yaml.load(f_secret)
     except FileNotFoundError:
       sys.stderr.write("Impossible de charger le fichier secret.yaml.")
@@ -54,3 +55,18 @@ class PluginSupervision(PluginSupervisionBase):
     else:
       sys.stderr.write("Problème d'authentification vers centreon")
       exit(12)
+
+  def get_hosts(self, retry=True):
+    """Méthode de récupération de la liste des hôtes présent dans centreon."""
+    if not self.token:
+      self.authenticate()
+    r = requests.get(
+      self.config['centreon']['url'],
+      headers={'content-type': 'application/json',
+               'centreon-auth-token': self.token},
+      params={'object': 'centreon_realtime_hosts',
+              'action': 'list',
+              'fields': 'address'}
+    )
+    return r.json()
+
