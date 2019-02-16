@@ -1,0 +1,7 @@
+centreon:
+  url: http://192.168.56.101/centreon/api/index.php
+network:
+  - begin: 192.168.10.9
+    end: 192.168.10.12
+  - begin: 192.168.56.1
+    end: 192.168.56.3
