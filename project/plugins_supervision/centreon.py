@@ -19,16 +19,16 @@ class PluginSupervision(PluginSupervisionBase):
 
         # Chargement des fichiers de configuration
         try:
-            with open("../config.yaml", "r") as f_config:
+            with open("project/config.yaml", "r") as f_config:
                 self.config = yaml.load(f_config)
         except FileNotFoundError:
-            sys.stderr.write("Impossible de charger le fichier config.yaml.")
+            sys.stderr.write("Impossible de charger le fichier config.yaml.\n")
             exit(10)
         try:
-            with open("../secret.yaml", "r") as f_secret:
+            with open("project/secret.yaml", "r") as f_secret:
                 self.secret = yaml.load(f_secret)
         except FileNotFoundError:
-            sys.stderr.write("Impossible de charger le fichier secret.yaml.")
+            sys.stderr.write("Impossible de charger le fichier secret.yaml.\n")
             exit(11)
 
         self.url = (
@@ -79,9 +79,4 @@ class PluginSupervision(PluginSupervisionBase):
                 "fields": "address",
             },
         )
-        return r.json()
-
-
-# test / debug
-p = PluginSupervision()
-print(p.get_hosts())
+        return [x["address"] for x in r.json()]

@@ -15,6 +15,7 @@ def open_yaml(filename):
         return None
         exit(10)
 
+
 def compare_ip(list_ip1, list_ip2):
     """
   Renvoi un tuple contenant deux elements liste :

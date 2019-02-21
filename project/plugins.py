@@ -3,7 +3,6 @@
 
 from pathlib import Path
 from importlib import import_module
-from os.path import splitext
 
 
 def load_plugins(plugins_dirs, class_name):
@@ -13,7 +12,10 @@ def load_plugins(plugins_dirs, class_name):
             try:
                 yield (
                     p.stem,
-                    import_module(str(p.with_suffix("")).replace("/", "."), class_name),
+                    getattr(
+                        import_module(str(p.with_suffix("")).replace("/", ".")),
+                        class_name,
+                    ),
                 )
             except:
-                print(f"error {p}")
+                pass

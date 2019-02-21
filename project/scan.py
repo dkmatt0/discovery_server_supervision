@@ -4,7 +4,6 @@
 import sys
 
 from scapy.all import sr1, IP, ICMP, TCP
-from common import open_yaml, compare_ip
 
 
 class ScanIP(object):
@@ -71,29 +70,3 @@ class ScanIP(object):
 
     def get_ip(self):
         return self.ip
-
-
-## test / debug
-
-if __name__ == "__main__":
-    ip = ScanIP()
-
-    config = open_yaml("config.yaml")
-    if config is not None:
-        if "network" in config:
-            for config_range_ip in config["network"]:
-                ip.add_ip((config_range_ip["begin"], config_range_ip["end"]))
-        else:
-            sys.stderr.write('Le fichier yaml n\'a pas de section "network".')
-            exit(1)
-    else:
-        sys.stderr.write("Fichier config.yaml non chargé!")
-        exit(1)
-
-    # ip.check_ping()
-
-    list_ip_supervision = ["192.168.10.10"]
-
-    known_ip, unknown_ip = compare_ip(ip.get_ip(), list_ip_supervision)
-
-    print(known_ip, unknown_ip)
