@@ -6,6 +6,7 @@ class PluginSupervisionBase(object):
     """Classe de base des plugins de supervision."""
 
     def __init__(self):
+        super(PluginSupervisionBase, self).__init__()
         self.version = None
 
     def get_version(self):

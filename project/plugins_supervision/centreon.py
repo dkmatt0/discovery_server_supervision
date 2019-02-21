@@ -6,7 +6,7 @@ import sys
 import requests
 import yaml
 
-from base import PluginSupervisionBase
+from .base import PluginSupervisionBase
 
 
 class PluginSupervision(PluginSupervisionBase):
@@ -67,7 +67,8 @@ class PluginSupervision(PluginSupervisionBase):
         """Méthode de récupération de la liste des hôtes présent dans centreon."""
         if not self.token:
             self.authenticate()
-        r = requests.get(self.url,
+        r = requests.get(
+            self.url,
             headers={
                 "content-type": "application/json",
                 "centreon-auth-token": self.token,
@@ -81,3 +82,6 @@ class PluginSupervision(PluginSupervisionBase):
         return r.json()
 
 
+# test / debug
+p = PluginSupervision()
+print(p.get_hosts())
