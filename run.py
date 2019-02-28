@@ -32,10 +32,18 @@ if __name__ == "__main__":
         sys.stderr.write("Fichier config.yaml non chargé!")
         exit(1)
 
-    # ip.check_ping()
-
     list_ip_supervision = centreon.get_hosts()
 
-    known_ip, unknown_ip = compare_ip(ip.get_ip(), list_ip_supervision)
+    ip_known, ip_unknown = compare_ip(ip.get_ip(), list_ip_supervision)
 
-    print(known_ip, unknown_ip)
+    ip.rem_ip(ip_known)
+    ip.check_ping(timeout=0.5)
+
+    ip_linux = ip.check_tcp(22, update_ip=False)  # ssh
+    ip_windows = ip.check_tcp(135, update_ip=False)  # rcp
+
+    _, ip_unknown = compare_ip(ip.get_ip(), set(ip_linux + ip_windows))
+
+    print("ip linux", ip_linux)
+    print("ip windows", ip_windows)
+    print("ip inconnu", ip_unknown)

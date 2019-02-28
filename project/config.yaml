@@ -3,7 +3,9 @@ centreon:
   ip: 192.168.56.102
   url: /centreon/api/index.php
 network:
-  - begin: 192.168.10.1
+  - begin: 192.168.10.9
     end: 192.168.10.12
+  - begin: 192.168.10.100
+    end: 192.168.10.125
   - begin: 192.168.56.100
     end: 192.168.56.103

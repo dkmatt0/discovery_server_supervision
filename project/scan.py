@@ -48,25 +48,43 @@ class ScanIP(object):
         self.ip.extend(self._range_ip(*ip))
         return len(self.ip)
 
-    def check_ping(self, timeout=3, keep_ip=False):
+    def rem_ip(self, ip_list):
+        self.ip = [x for x in self.ip if x not in ip_list]
+        return None
+
+    def check_icmp(self, timeout=3, update_ip=True):
         """Fonction de ping (ICMP)."""
         list_ip = []
         for ip in self.ip:
             response = sr1(IP(dst=ip) / ICMP(), timeout=timeout, verbose=False)
             if response is not None and response[1].type == 0:
                 list_ip.append(ip)
-        if keep_ip:
+        if not update_ip:
             return list_ip
         else:
             self.ip = list_ip
             len(self.ip)
 
-    def check_icmp(self, *args, **kwargs):
-        return self.check_ping(*args, **kwargs)
+    check_ping = check_icmp
 
-    def check_tcp(self, ip, timeout=3, keep_ip=False):
+    def check_tcp(self, dport, timeout=3, update_ip=False):
         """Fonction de scan tcp."""
-        pass
+        list_ip = []
+        for ip in self.ip:
+            response = sr1(
+                IP(dst=ip) / TCP(dport=dport, flags="S"), timeout=timeout, verbose=False
+            )
+            if (
+                response is not None
+                and response[0].proto == 6  # tcp
+                and response[1].flags == "SA"
+            ):
+                list_ip.append(ip)
+        if not update_ip:
+            return list_ip
+        else:
+            self.ip = list_ip
+            len(self.ip)
 
     def get_ip(self):
         return self.ip
