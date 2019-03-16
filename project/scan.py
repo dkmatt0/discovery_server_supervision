@@ -3,6 +3,9 @@
 
 import sys
 
+import logging
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import sr1, IP, ICMP, TCP
 
 
